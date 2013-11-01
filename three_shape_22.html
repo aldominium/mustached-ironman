@@ -1,0 +1,312 @@
+
+<!-- Aldo Olivares Dominguez A01096624 y Martin Granados Garcia -->
+<!-- Graficas computacionales -->
+<html> 
+    <head> 
+        <title> Defining a 3D Shape </title> 
+        <style> 
+            canvas { width: 100%; height: 100% }
+        </style> 
+    </head> 
+    <body> 
+        <script src="three.min.js"> </script> 
+        
+        <script> 
+
+            window.addEventListener('keydown',doKeyDown,true);
+            // agregamos el "listener" para "escuchar" los eventos del teclado
+            
+            var cam_zpos = 100.0;
+            var cam_ypos = 300.0;
+            var cam_xpos = 0;
+            var Pi = 3.1415926535;
+            var ang_rad = 0;
+            var ang2_rad = 3.1415926535/2;
+
+            //controls = new THREE.OrbitControls( camera, renderer.domElement );
+            
+            function doKeyDown(evt){
+                switch (evt.keyCode) {
+                    case 38:  /* Up arrow was pressed */                        
+                        var dx = 2 * Math.sin(ang_rad); 
+                        var dz = 2 * Math.cos(ang_rad); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;
+                        break;
+                    case 40:  /* Down arrow was pressed */
+                        var dx = 2 * Math.sin(ang_rad); 
+                        var dz = 2 * Math.cos(ang_rad); 
+                        cam_zpos += dz;
+                        cam_xpos += dx;
+                        break;
+                    case 37:  /* Left arrow was pressed */
+                        ang_rad += (5 * Pi /180); 
+                        break;
+                    case 39:  /* Right arrow was pressed */
+                        ang_rad -= (5 * Pi /180);                        
+                    break;
+                    case 87:  /* W was pressed */
+                        camera.position.y += 1;                        
+                    break;
+                    case 83:  /* S was pressed */
+                        camera.position.y -= 1;                        
+                    break;
+                    case 82: 
+                        camera.rotation.x += .5;
+                    break;
+                    case 70:  /* E was pressed */
+                        camera.rotation.x -= .5; 
+                    break;
+                    case 68:  /* D was pressed */
+                        var dx = 2 * Math.sin(ang2_rad); 
+                        var dz = 2 * Math.cos(ang2_rad); 
+                        cam_zpos += dz;
+                        cam_xpos += dx;
+                                               
+                    break;
+                    case 65: /* A presionada*/
+                    var dx = 2 * Math.sin(ang2_rad); 
+                        var dz = 2 * Math.cos(ang2_rad); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;
+
+                }
+            }
+            // three basic components of a scene
+            var scene = new THREE.Scene(); 
+            var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.01, 1000); 
+            var renderer = new THREE.WebGLRenderer(); 
+
+
+            //Geometrias
+            // create a new geometry
+            var geom2 = new THREE.Geometry();
+            crearPisoCompleto(geom2);
+
+            var geom3 = new THREE.Geometry();
+            crearPisoCompleto(geom3);
+
+            /*var geom3 = new THREE.Geometry();
+            crearPisoCompleto(geom3);*/
+            
+
+
+            
+            //---------------------
+           //------Funciones de creacion de geometrias
+           //----------------------
+            function crearPisoCompleto (g) {
+                insertarVertice(-141,173,0,g);//0
+                insertarVertice(6,131,0,g);//1
+                insertarVertice(34,80,0,g);//2
+                insertarVertice(94,-27,0,g);//3
+                insertarVertice(265,-73,0,g);//4
+                insertarVertice(273,-30,0,g);//5
+                insertarVertice(124,11,0,g);//6
+                insertarVertice(71,101,0,g);//7
+                insertarVertice(142,141,0,g);//8
+                insertarVertice(-129,217,0,g);//9
+
+
+          
+                insertarCara(0,8,9,g);
+                insertarCara(0,1,8,g);
+
+                insertarCara(1,2,8,g);
+                insertarCara(2,3,7,g);
+
+                insertarCara(3,6,7,g);
+                insertarCara(4,5,3,g);
+
+                insertarCara(3,5,6,g);
+                insertarCara(5,3,4,g);
+
+                clonarAbajo(g,-5,10);
+
+                for(var i = 0;i<9; i++){
+                    insertarCara(0+i,10+i,11+i,g);
+                    insertarCara(0+i,11+i,1+i,g);
+                }
+                insertarCara(9,19,10,g);
+                insertarCara(9,10,0,g);
+
+               
+
+
+
+                g.computeFaceNormals();
+           }
+
+            //---------------------------------
+            //---------Materiales
+            //---------------------------------
+
+            // create a Lambert material
+            var cosaMaterial = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0x00ee00
+                        });
+
+            // create a wireframe material
+            var meshMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+
+            
+
+            //-----------------------------------
+           //-------------Creacion de los mesh
+           //-----------------------------------
+            var object2 = new THREE.Mesh( geom2, cosaMaterial);
+            var object3 = new THREE.Mesh( geom3, cosaMaterial);
+
+           
+            var object4 = new THREE.Mesh( geom2, cosaMaterial);
+            var object5 = new THREE.Mesh( geom3, cosaMaterial);
+
+            var object6 = new THREE.Mesh( geom2, cosaMaterial);
+            var object7 = new THREE.Mesh( geom3, cosaMaterial);
+
+
+            object3.rotation.z = aRadianes(180);
+            object5.rotation.z = aRadianes(180);
+            object7.rotation.z = aRadianes(180);
+            object3.position.y -= 100;
+            object5.position.y -= 100;
+            object7.position.y -= 100;
+
+            object4.position.z -= 40;
+            object6.position.z -= 80;
+            object5.position.z -= 40;
+            object7.position.z -= 80;
+           
+
+            //-------------------------------
+           //--------Grupos
+           //--------------------------------
+
+           //-------------------------------
+           //--------Funciones de ayuda
+           //--------------------------------
+           function insertarVertice(x,y,z,g){
+                
+                g.vertices.push(new THREE.Vector3( x,  y, z));
+
+            }
+
+            function insertarCara(x,y,z,g){
+                
+                g.faces.push( new THREE.Face3( x,y,z ) );
+
+            }  
+
+            function aGrados(radianes){
+                return radianes * 180 / Math.PI;
+            }
+
+            function aRadianes(degrees) {
+              return degrees * Math.PI / 180;
+            }
+
+            function rotarVertices(x,y,z,theta){
+                x2 = x*cos(theta) - y*sin(theta);
+                y2 = x*sin(theta) + y*cos(theta);
+
+                return this.vertices.push(x2,y2,z);
+            }
+
+            function rotar180 (x,y,z) {
+                return this.vertices.push(-x,-y,z);
+            }
+
+            function clonarAbajo(g,profundidad,tam) {
+                longitud_vertices = g.vertices.length;
+                longitud_faces = g.faces.length;
+                for(var i = 0; i<longitud_vertices;i++){
+                    insertarVertice(g.vertices[i].x,g.vertices[i].y,profundidad,g);
+                    //console.log("x:"+g.vertices[i].x+"y:"+g.vertices[i].y+" p:"+profundidad);
+                }
+                for(var i = 0; i<longitud_faces;i++){
+                    insertarCara(g.faces[i].a+tam,g.faces[i].c+tam,g.faces[i].b+tam,g);
+                    console.log("gh");
+                }
+            }
+
+            
+
+                             
+            
+            renderer.setSize(window.innerWidth, window.innerHeight); 
+            document.body.appendChild(renderer.domElement); 
+
+            camera.position.z = cam_zpos; 
+            camera.position.y = cam_ypos; 
+            camera.rotation.x += aRadianes(-80); 
+
+            //---------------------------------
+            //---------LUCES
+            //---------------------------------
+
+            // create some point lights
+            var pointLight = new THREE.PointLight( 0xFFFFFF );
+            var pointLight2 = new THREE.PointLight( 0xFFFFFF );
+            var light = new THREE.AmbientLight( 0x777777 ); // soft white light
+            //scene.add( light );
+
+            // set its position
+            pointLight.position.x = 10;
+            pointLight.position.y = 50;
+            pointLight.position.z = 500;
+
+           
+            
+            
+            // set its position
+            pointLight2.position.x = 10;
+            pointLight2.position.y = -50;
+            pointLight2.position.z = -500;
+
+
+            //-------------------------------
+           //--------ADDERS
+           //--------------------------------
+            // add to the scene
+            scene.add(pointLight);
+            scene.add(pointLight2);
+            scene.add(object2);
+            scene.add(object3);
+            scene.add(object4);
+            scene.add(object5);
+            scene.add(object6);
+            scene.add(object7);
+            
+            
+            //-------------------------------
+           //--------RENDER
+           //--------------------------------
+            // set the background color
+            renderer.setClearColor(0x000022, 1);
+
+            camera.position.z = cam_zpos; 
+            camera.position.y = cam_ypos;
+            
+            //renderer.setClearColor(0xffffff, 0.6);
+            var render = function () { 
+               
+                requestAnimationFrame(render); 
+                //object2.rotation.y += 0.01;
+                //object3.rotation.y += 0.01;
+                camera.position.z = cam_zpos; 
+                camera.position.x = cam_xpos; 
+              
+                camera.rotation.y = ang_rad;
+              
+            
+                
+                
+                renderer.render(scene, camera); 
+            }; 
+            render();
+
+
+        </script> 
+    </body> 
+</html>
