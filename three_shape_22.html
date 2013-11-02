@@ -16,9 +16,9 @@
             window.addEventListener('keydown',doKeyDown,true);
             // agregamos el "listener" para "escuchar" los eventos del teclado
             
-            var cam_zpos = 100.0;
-            var cam_ypos = 300.0;
-            var cam_xpos = 0;
+            var cam_zpos = -10.0;
+            var cam_ypos = 107.0;
+            var cam_xpos = -232;
             var Pi = 3.1415926535;
             var ang_rad = 0;
             var ang2_rad = 3.1415926535/2;
@@ -146,6 +146,11 @@
                         {
                             color: 0x00ee00
                         });
+            var cosaMaterial = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0xffffff
+                        });
+
 
             // create a wireframe material
             var meshMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
@@ -182,6 +187,18 @@
             //-------------------------------
            //--------Grupos
            //--------------------------------
+
+           grupo_edificio1 = new THREE.Object3D(); 
+           grupo_edificio2 = new THREE.Object3D();
+
+           grupo_edificio1.add(object2);
+           grupo_edificio1.add(object4);
+           grupo_edificio1.add(object6);
+
+           grupo_edificio2.add(object3);
+           grupo_edificio2.add(object5);
+           grupo_edificio2.add(object7);
+
 
            //-------------------------------
            //--------Funciones de ayuda
@@ -271,14 +288,10 @@
             // add to the scene
             scene.add(pointLight);
             scene.add(pointLight2);
-            scene.add(object2);
-            scene.add(object3);
-            scene.add(object4);
-            scene.add(object5);
-            scene.add(object6);
-            scene.add(object7);
             
             
+            scene.add(grupo_edificio1);
+            scene.add(grupo_edificio2);
             //-------------------------------
            //--------RENDER
            //--------------------------------
@@ -290,10 +303,13 @@
             
             //renderer.setClearColor(0xffffff, 0.6);
             var render = function () { 
-               
+               	//console.log("x:" + camera.position.x+" y: "+camera.position.y+" z:"+camera.position.z);
+               	//console.log(cam_ypos);
+               	//console.log(cam_zpos);
                 requestAnimationFrame(render); 
-                //object2.rotation.y += 0.01;
-                //object3.rotation.y += 0.01;
+                //grupo_edificio1.rotation.x += 0.01;
+                //object2.rotation.x += 0.01;
+                //grupo_edificio2.rotation.z += 0.01;
                 camera.position.z = cam_zpos; 
                 camera.position.x = cam_xpos; 
               
