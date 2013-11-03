@@ -98,8 +98,26 @@
             var geom7 = new THREE.Geometry();
             crearPisoMitad(geom7);
 
+            var geom8 = new THREE.Geometry();
+            crearAulasMagnasBase(geom8,-9);
+
+            var geom9 = new THREE.Geometry();
+            crearAulasMagnasBase(geom9,-9);
+
+            var geom10 = new THREE.Geometry();
+            crearAulasMagnasBase(geom10,-19);
+
+            var geom11 = new THREE.Geometry();
+            crearAulasMagnasBase(geom11,-3);
+
             /*var geom3 = new THREE.Geometry();
             crearPisoCompleto(geom3);*/
+
+            var pared1 = new THREE.CubeGeometry( 25, 2, 10 );
+            var pared2 = new THREE.CubeGeometry( 25, 2, 20 );
+            var pared3 = new THREE.CubeGeometry( 10, 2, 20 );
+            var pared4 = new THREE.CubeGeometry( 7.5, 2, 20 );
+            var pared5 = new THREE.CubeGeometry( 7.5, 2, 10 );
             
 
 
@@ -152,7 +170,6 @@
                 insertarVertice(142,141,0,g);//3
                 insertarVertice(-129,217,0,g);//4
 
-
           
                 insertarCara(0,4,3,g);
                 insertarCara(0,3,1,g);
@@ -163,6 +180,10 @@
                 insertarVertice(34,80,-3,g);//7
                 insertarVertice(142,141,-3,g);//8
                 insertarVertice(-129,217,-3,g);//9
+
+                insertarCara(5,8,9,g);
+                insertarCara(5,6,8,g);
+                insertarCara(6,7,8,g);
 
 
           
@@ -188,18 +209,72 @@
                 g.computeFaceNormals();
            }
 
+          
+
+           function crearAulasMagnasBase(g,tam) {
+               
+
+                insertarVertice(18.713,-0.243,0,g);//0
+                insertarVertice(22.144,-0.243,0,g);//1
+                insertarVertice(21.032,6.695,0,g);//2
+                insertarVertice(17.958,5.546,0,g);//3
+                aumento = 0;
+                for(var i = 0;i<19;i++){
+                	rotarVertices(18.713,-0.243,0,18+aumento,g);//0
+                	rotarVertices(22.144,-0.243,0,18+aumento,g);//1
+                	rotarVertices(21.032,6.695,0,18+aumento,g);//2
+                	rotarVertices(17.958,5.546,0,18+aumento,g);//3
+                	aumento+=18;
+                }
+                //console.log("vertices: "+ g.vertices.length);
+                aumento = 0;
+                for(var i = 0;i<20;i++){
+                	insertarCara(0+aumento,1+aumento,2+aumento,g);
+                	insertarCara(0+aumento,2+aumento,3+aumento,g);
+                	aumento += 4;
+                }
+
+                
+                clonarAbajo(g,tam,g.vertices.length);   
+                //console.log(g.vertices.length);
+
+                aumento = 0;
+                for(var i = 0;i<20;i++){
+                	insertarCara(1+aumento,81+aumento,82+aumento,g);
+                	insertarCara(1+aumento,82+aumento,2+aumento,g);
+
+                	insertarCara(3+aumento,83+aumento,80+aumento,g);
+                	insertarCara(3+aumento,80+aumento,0+aumento,g);
+                	aumento+=4;
+
+                }
+                
+
+                //insertarCara(0,3,84,g);
+                //insertarCara(0,84,81,g);
+                
+
+                g.computeFaceNormals();
+                
+                
+           }
+
+
+
+                
             //---------------------------------
             //---------Materiales
             //---------------------------------
 
             // create a Lambert material
-            var cosaMaterial = new THREE.MeshLambertMaterial(
-                        {
-                            color: 0x00ee00
-                        });
+           
             var cosaMaterial = new THREE.MeshLambertMaterial(
                         {
                             color: 0xffffff
+                        });
+            var azul = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0x0000ff
                         });
 
 
@@ -228,6 +303,14 @@
             var object11 = new THREE.Mesh( geom7, cosaMaterial);
 
 
+            //cilindros
+            var object12 = new THREE.Mesh( geom8, cosaMaterial);
+
+            var object13 = new THREE.Mesh( geom9, cosaMaterial);
+            var object14 = new THREE.Mesh( geom10, cosaMaterial);
+            var object15 = new THREE.Mesh( geom11, azul);
+            var object16 = new THREE.Mesh( geom11, azul);
+
             object3.rotation.z = aRadianes(180);
             object5.rotation.z = aRadianes(180);
             object7.rotation.z = aRadianes(180);
@@ -250,7 +333,27 @@
 
             object8.position.z += 40;
             object9.position.z += 80;
+
+            object12.position.z = 0;
+            object16.position.z += 3;
+            object14.position.z += 22;
+            object15.position.z += 25;
+            object13.position.z += 34;
            
+            //pared principal salones
+            var pared1_mesh = new THREE.Mesh( pared1, cosaMaterial);
+            var pared2_mesh = new THREE.Mesh( pared2, cosaMaterial);
+           	var pared3_mesh = new THREE.Mesh( pared3, cosaMaterial);
+           	var pared4_mesh = new THREE.Mesh( pared4, cosaMaterial);
+           	var pared5_mesh = new THREE.Mesh( pared5, cosaMaterial);
+
+           	pared2_mesh.position.z += 10;
+           	pared3_mesh.position.x += 15;
+           	pared3_mesh.position.z += 10;
+           	pared4_mesh.position.x += 20;
+           	pared4_mesh.position.z += 10;
+           	pared5_mesh.position.x += 20;
+
 
             //-------------------------------
            //--------Grupos
@@ -259,11 +362,13 @@
            grupo_edificio1 = new THREE.Object3D(); 
            grupo_edificio2 = new THREE.Object3D();
            grupo_ambos = new THREE.Object3D();
+           grupo_magnas1 = new THREE.Object3D();
 
            grupo_edificio1.add(object2);
            grupo_edificio1.add(object4);
            grupo_edificio1.add(object6);
            grupo_edificio1.add(object8);
+           grupo_edificio1.add(object9);
 
            grupo_edificio2.add(object3);
            grupo_edificio2.add(object5);
@@ -271,17 +376,71 @@
            grupo_edificio2.add(object10);
            grupo_edificio2.add(object11);
 
-           grupo_ambos.add(object2);
-           grupo_ambos.add(object3);
-           grupo_ambos.add(object4);
-           grupo_ambos.add(object5);
-           grupo_ambos.add(object6);
-           grupo_ambos.add(object7);
-           grupo_ambos.add(object8);
-           grupo_ambos.add(object9);
-           grupo_ambos.add(object10);
-           grupo_ambos.add(object11);
-           //grupo_ambos.add(grupo_edificio2);
+           grupo_magnas1.add(object12);
+           grupo_magnas1.add(object13);
+           grupo_magnas1.add(object14);
+           grupo_magnas1.add(object15);
+           grupo_magnas1.add(object16);
+
+           	grupo_magnas1.position.x = -132;
+            grupo_magnas1.position.y = 194;
+            grupo_magnas1.position.z = -80;
+
+            var grupo_magnas2 = grupo_magnas1.clone();
+            var grupo_magnas3 = grupo_magnas1.clone();
+            var grupo_magnas4 = grupo_magnas1.clone();
+            var grupo_magnas5 = grupo_magnas1.clone();
+            var grupo_magnas6 = grupo_magnas1.clone();
+
+
+            grupo_magnas2.position.z = -40;
+            grupo_magnas3.position.z = 0;
+            grupo_magnas4.position.z = 40;
+            grupo_magnas5.position.z = 80;
+            grupo_magnas6.position.z = 120;
+
+
+            var grupo_magnas7 = grupo_magnas1.clone();
+            grupo_magnas7.position.x = 269;
+            grupo_magnas7.position.y = -53;
+            grupo_magnas7.position.z = -80;
+            var grupo_magnas8 = grupo_magnas7.clone();
+            var grupo_magnas9 = grupo_magnas7.clone();
+            var grupo_magnas10 = grupo_magnas7.clone();
+
+            grupo_magnas8.position.z = -40;
+            grupo_magnas9.position.z = 0;
+            grupo_magnas10.position.z = 40;
+
+            var grupo_magnas11 = grupo_magnas1.clone();
+            grupo_magnas11.position.x = -248;
+            grupo_magnas11.position.y = 72;
+            grupo_magnas11.position.z = -80;
+            var grupo_magnas12 = grupo_magnas11.clone();
+            var grupo_magnas13 = grupo_magnas11.clone();
+            grupo_magnas12.position.z = -40;
+            grupo_magnas13.position.z = 	0;
+
+
+            var grupo_magnas14 = grupo_magnas1.clone();
+            grupo_magnas14.position.x = 158;
+            grupo_magnas14.position.y = -174;
+            grupo_magnas14.position.z = -120;
+            var grupo_magnas15 = grupo_magnas14.clone();
+            var grupo_magnas16 = grupo_magnas14.clone();
+            var grupo_magnas17 = grupo_magnas14.clone();
+            var grupo_magnas18 = grupo_magnas14.clone();
+
+
+            grupo_magnas14.position.z = -80;
+            grupo_magnas15.position.z = -40;
+            grupo_magnas16.position.z = 0;
+            grupo_magnas17.position.z = 40;
+            grupo_magnas18.position.z = 80;
+
+
+          
+           
 
 
            //-------------------------------
@@ -307,15 +466,20 @@
               return degrees * Math.PI / 180;
             }
 
-            function rotarVertices(x,y,z,theta){
-                x2 = x*cos(theta) - y*sin(theta);
-                y2 = x*sin(theta) + y*cos(theta);
+            function rotarVertices(x,y,z,theta,g){
+                x2 = x*Math.cos(aRadianes(theta)) - y*Math.sin(aRadianes(theta));
+                y2 = x*Math.sin(aRadianes(theta)) + y*Math.cos(aRadianes(theta));
 
-                return this.vertices.push(x2,y2,z);
+                insertarVertice(x2,y2,z,g);
             }
 
-            function rotar180 (x,y,z) {
-                return this.vertices.push(-x,-y,z);
+
+
+            function rotar90 (x,y,z,g) {
+                g.vertices.push(-y,x,z);
+            }
+            function rotar180 (x,y,z,g) {
+                g.vertices.push(-x,-y,z,g);
             }
 
             function clonarAbajo(g,profundidad,tam) {
@@ -340,7 +504,7 @@
 
             camera.position.z = cam_zpos; 
             camera.position.y = cam_ypos; 
-            camera.rotation.x += aRadianes(-80); 
+            //camera.rotation.x += aRadianes(-80); 
 
             //---------------------------------
             //---------LUCES
@@ -349,8 +513,8 @@
             // create some point lights
             var pointLight = new THREE.PointLight( 0xFFFFFF );
             var pointLight2 = new THREE.PointLight( 0xFFFFFF );
-            var light = new THREE.AmbientLight( 0x777777 ); // soft white light
-            scene.add( light );
+            var light = new THREE.AmbientLight( 0x999999 ); // soft white light
+            
 
             // set its position
             pointLight.position.x = 10;
@@ -369,15 +533,61 @@
             //-------------------------------
            //--------ADDERS
            //--------------------------------
+
             // add to the scene
             scene.add(pointLight);
             scene.add(pointLight2);
+            scene.add( light );
+
+            //paredes
+            scene.add( pared1_mesh );
+            scene.add( pared2_mesh );
+            scene.add( pared3_mesh );
+            scene.add( pared4_mesh );
+            scene.add( pared5_mesh );
             
             //scene.add(object2);
             scene.add(grupo_edificio1);
             scene.add(grupo_edificio2);
 
+
+
             scene.add(grupo_ambos);
+            scene.add(grupo_magnas1);
+            scene.add(grupo_magnas2);
+            scene.add(grupo_magnas3);
+            scene.add(grupo_magnas4);
+            scene.add(grupo_magnas5);
+            scene.add(grupo_magnas6);
+
+            scene.add(grupo_magnas7);
+            scene.add(grupo_magnas8);
+            scene.add(grupo_magnas9);
+            scene.add(grupo_magnas10);
+
+            scene.add(grupo_magnas11);
+            scene.add(grupo_magnas12);
+            scene.add(grupo_magnas13);
+
+            scene.add(grupo_magnas14);
+            scene.add(grupo_magnas15);
+            scene.add(grupo_magnas16);
+            scene.add(grupo_magnas17);
+            scene.add(grupo_magnas18);
+            
+
+            grupo_edificio2.position.y += 118;
+            grupo_edificio2.position.x += 30;
+
+
+            //Aqui se pone el desnivel
+            object2.position.z += 40;
+            object4.position.z += 40;
+            object6.position.z += 40;
+            object8.position.z += 40;
+            object9.position.z += 40;
+            
+
             //-------------------------------
            //--------RENDER
            //--------------------------------
@@ -395,7 +605,7 @@
                 requestAnimationFrame(render); 
                 //grupo_edificio1.rotation.x += 0.01;
                 //grupo_edificio2.rotation.x += 0.01;
-                grupo_ambos.rotation.z += 0.01;
+                //grupo_ambos.rotation.x += 0.01;
                 camera.position.z = cam_zpos; 
                 camera.position.x = cam_xpos; 
               
