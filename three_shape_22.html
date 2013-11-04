@@ -113,11 +113,12 @@
             /*var geom3 = new THREE.Geometry();
             crearPisoCompleto(geom3);*/
 
-            var pared1 = new THREE.CubeGeometry( 25, 2, 10 );
-            var pared2 = new THREE.CubeGeometry( 25, 2, 20 );
-            var pared3 = new THREE.CubeGeometry( 10, 2, 20 );
+            var pared1 = new THREE.CubeGeometry( 25, 2, 30 );
+            var pared2 = new THREE.CubeGeometry( 10, 2, 15 );
+            var pared3 = new THREE.CubeGeometry( 5, 2, 3 );
             var pared4 = new THREE.CubeGeometry( 7.5, 2, 20 );
             var pared5 = new THREE.CubeGeometry( 7.5, 2, 10 );
+            var pared6 = new THREE.CubeGeometry( 30, 2, 20 );
             
 
 
@@ -346,13 +347,18 @@
            	var pared3_mesh = new THREE.Mesh( pared3, cosaMaterial);
            	var pared4_mesh = new THREE.Mesh( pared4, cosaMaterial);
            	var pared5_mesh = new THREE.Mesh( pared5, cosaMaterial);
+           	var pared6_mesh = new THREE.Mesh( pared6, cosaMaterial);
 
-           	pared2_mesh.position.z += 10;
-           	pared3_mesh.position.x += 15;
-           	pared3_mesh.position.z += 10;
+           	pared2_mesh.position.y += 15;
+           	pared2_mesh.position.x += 25;
+           	//pared3_mesh.position.x += 15;
+           	//pared3_mesh.position.y += 30;
+
+
            	pared4_mesh.position.x += 20;
            	pared4_mesh.position.z += 10;
            	pared5_mesh.position.x += 20;
+           	pared6_mesh.position.y += 10;
 
 
             //-------------------------------
@@ -540,11 +546,12 @@
             scene.add( light );
 
             //paredes
-            scene.add( pared1_mesh );
-            scene.add( pared2_mesh );
-            scene.add( pared3_mesh );
-            scene.add( pared4_mesh );
-            scene.add( pared5_mesh );
+            //scene.add( pared1_mesh );
+            //scene.add( pared2_mesh );
+            //scene.add( pared3_mesh );
+            //scene.add( pared4_mesh );
+            //scene.add( pared5_mesh );
+            //scene.add( pared6_mesh );
             
             //scene.add(object2);
             scene.add(grupo_edificio1);
