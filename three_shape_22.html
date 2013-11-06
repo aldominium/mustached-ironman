@@ -45,22 +45,23 @@
                         ang_rad -= (5* Pi / 180);
                     break;
                     case 87:  /* W was pressed */
-                        camera.position.y += 0.5;                        
-                    break;
-                    case 83:  /* S was pressed */
-                        camera.position.y -= 0.5;                        
-                    break;
-                    case 65:  /* A was pressed */                        
                         var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
                         var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
                         cam_zpos -= dz;
-                        cam_xpos -= dx;
+                        cam_xpos -= dx;                   
                     break;
-                    case 68:  /* D was pressed */
+                    case 83:  /* S was pressed */
+                        
                         var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
                         var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
                         cam_zpos -= dz;
-                        cam_xpos -= dx;                   
+                        cam_xpos -= dx;                         
+                    break;
+                    case 65:  /* A was pressed */                        
+                       camera.position.y -= 0.5;
+                    break;
+                    case 68:  /* D was pressed */
+                        camera.position.y += 0.5;                   
                     break;
                     case 82:  /* R was pressed */
                     break;
@@ -307,6 +308,7 @@
            //-------------Creacion de los mesh
            //-----------------------------------
             var object2 = new THREE.Mesh( geom2, cosaMaterial);
+            //object2.rotation.x += 90;
             var object3 = new THREE.Mesh( geom3, cosaMaterial);
 
            
@@ -681,7 +683,7 @@
 
            //camera.rotation.x = 90;
             
-        
+        camera.rotation.z+= (aRadianes(90));
             var render = function () { 
                	//console.log("x:" + camera.position.x+" y: "+camera.position.y+" z:"+camera.position.z);
                	//console.log(cam_ypos);
@@ -690,6 +692,7 @@
                 //grupo_edificio1.rotation.x += 0.01;
                 //grupo_edificio2.rotation.x += 0.01;
                 //grupo_ambos.rotation.x += 0.01;
+
                 camera.position.x = cam_xpos;
                 camera.position.z = cam_zpos;
                 camera.rotation.y = ang_rad; 
