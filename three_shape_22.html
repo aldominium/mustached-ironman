@@ -117,6 +117,10 @@
             var pared5 = new THREE.CubeGeometry( 7.5, 2, 10 );
             var pared6 = new THREE.CubeGeometry( 30, 2, 20 );
 
+            //Pisos de la base del campus
+            var piso_general = new THREE.CubeGeometry( 400, 900, 30 );
+            var piso_general2 = new THREE.CubeGeometry( 500, 900, 30 );
+
             var barda1 = new THREE.CubeGeometry( 180, 2, 5 );
             var barda2 = new THREE.CubeGeometry( 180, 2, 5 );
             var barda3 = new THREE.CubeGeometry( 130, 2, 5 );
@@ -298,6 +302,11 @@
                             color: 0x0000ff
                         });
 
+            var asfalto = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0x003333
+                        });
+
 
             // create a wireframe material
             var meshMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
@@ -307,6 +316,16 @@
             //-----------------------------------
            //-------------Creacion de los mesh
            //-----------------------------------
+
+           var piso_general_mesh = new THREE.Mesh( piso_general, asfalto);
+           var piso_general_mesh2 = new THREE.Mesh( piso_general2, asfalto);
+           piso_general_mesh.position.z -= 90;
+           piso_general_mesh.position.y += 390;
+           piso_general_mesh.rotation.z += aGrados(89);
+
+           piso_general_mesh2.position.z -= 140;
+
+
             var object2 = new THREE.Mesh( geom2, cosaMaterial);
             //object2.rotation.x += 90;
             var object3 = new THREE.Mesh( geom3, cosaMaterial);
@@ -349,6 +368,7 @@
             object6.position.z -= 80;
             object5.position.z -= 40;
             object7.position.z -= 80;
+            
 
             object10.position.z += 40;
             object11.position.z += 80;
@@ -412,6 +432,7 @@
            grupo_edificio2.add(barda2_mesh);
            grupo_edificio2.add(barda3_mesh);
            
+           
 
            grupo_magnas1.add(object12);
            grupo_magnas1.add(object13);
@@ -428,13 +449,13 @@
             var grupo_magnas4 = grupo_magnas1.clone();
             var grupo_magnas5 = grupo_magnas1.clone();
             var grupo_magnas6 = grupo_magnas1.clone();
-
-
+           
             grupo_magnas2.position.z = -40;
             grupo_magnas3.position.z = 0;
             grupo_magnas4.position.z = 40;
             grupo_magnas5.position.z = 80;
             grupo_magnas6.position.z = 120;
+
 
 
             var grupo_magnas7 = grupo_magnas1.clone();
@@ -455,6 +476,8 @@
             grupo_magnas11.position.z = -80;
             var grupo_magnas12 = grupo_magnas11.clone();
             var grupo_magnas13 = grupo_magnas11.clone();
+            var grupo_magnas20 = grupo_magnas11.clone();
+            grupo_magnas20.position.z = -120;
             grupo_magnas12.position.z = -40;
             grupo_magnas13.position.z = 	0;
 
@@ -467,13 +490,16 @@
             var grupo_magnas16 = grupo_magnas14.clone();
             var grupo_magnas17 = grupo_magnas14.clone();
             var grupo_magnas18 = grupo_magnas14.clone();
+            var grupo_magnas19 = grupo_magnas14.clone();
 
-
+            grupo_magnas19.position.z = -120;
             grupo_magnas14.position.z = -80;
             grupo_magnas15.position.z = -40;
             grupo_magnas16.position.z = 0;
             grupo_magnas17.position.z = 40;
             grupo_magnas18.position.z = 80;
+
+
 
             
             
@@ -622,6 +648,10 @@
             scene.add(pointLight2);
             scene.add( light );
 
+            scene.add(piso_general_mesh);
+
+            scene.add(piso_general_mesh2);
+
             //paredes
             scene.add( pared1_mesh );
             scene.add( pared2_mesh );
@@ -643,6 +673,8 @@
             scene.add(grupo_magnas4);
             scene.add(grupo_magnas5);
             scene.add(grupo_magnas6);
+            scene.add(grupo_magnas19);
+            scene.add(grupo_magnas20);
 
             scene.add(grupo_magnas7);
             scene.add(grupo_magnas8);
@@ -653,11 +685,13 @@
             scene.add(grupo_magnas12);
             scene.add(grupo_magnas13);
 
+            //grupo de aulas magnas de 6 pisos aulas 2
             scene.add(grupo_magnas14);
             scene.add(grupo_magnas15);
             scene.add(grupo_magnas16);
             scene.add(grupo_magnas17);
             scene.add(grupo_magnas18);
+            scene.add(grupo_magnas19);
             
 
             grupo_edificio2.position.y += 118;
