@@ -29,14 +29,14 @@
                     case 38:  /* Up arrow was pressed */                        
                         var dx = 0.5 * Math.sin(ang_rad); 
                         var dz = 0.5 * Math.cos(ang_rad); 
-                        cam_zpos -= dz;
-                        cam_xpos -= dx;
+                        cam_zpos -= dz*4;
+                        cam_xpos -= dx*4;
                         break;
                     case 40:  /* Down arrow was pressed */
                         var dx = 0.5 * Math.sin(ang_rad); 
                         var dz = 0.5 * Math.cos(ang_rad); 
-                        cam_zpos += dz;
-                        cam_xpos += dx;
+                        cam_zpos += dz*4;
+                        cam_xpos += dx*4;
                         break;
                     case 37:  /* Left arrow was pressed */
                         ang_rad += (5* Pi / 180);                        
@@ -45,23 +45,22 @@
                         ang_rad -= (5* Pi / 180);
                     break;
                     case 87:  /* W was pressed */
-                        var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
-                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
-                        cam_zpos -= dz;
-                        cam_xpos -= dx;                   
+                        camera.position.y += 20;                        
                     break;
                     case 83:  /* S was pressed */
-                        
-                        var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
-                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
-                        cam_zpos -= dz;
-                        cam_xpos -= dx;                         
+                        camera.position.y -= 20;                        
                     break;
                     case 65:  /* A was pressed */                        
-                       camera.position.y -= 0.5;
+                        var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
+                        cam_zpos -= dz*8;
+                        cam_xpos -= dx*8;
                     break;
                     case 68:  /* D was pressed */
-                        camera.position.y += 0.5;                   
+                        var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
+                        cam_zpos -= dz*8;
+                        cam_xpos -= dx*8;                   
                     break;
                     case 82:  /* R was pressed */
                     break;
@@ -110,21 +109,24 @@
             /*var geom3 = new THREE.Geometry();
             crearPisoCompleto(geom3);*/
 
-            var pared1 = new THREE.CubeGeometry( 25, 2, 30 );
-            var pared2 = new THREE.CubeGeometry( 10, 2, 15 );
-            var pared3 = new THREE.CubeGeometry( 5, 2, 3 );
-            var pared4 = new THREE.CubeGeometry( 7.5, 2, 20 );
-            var pared5 = new THREE.CubeGeometry( 7.5, 2, 10 );
-            var pared6 = new THREE.CubeGeometry( 30, 2, 20 );
+            
 
             //Pisos de la base del campus
-            var piso_general = new THREE.CubeGeometry( 400, 900, 30 );
+            var piso_general = new THREE.CubeGeometry( 400, 1200, 10 );
             var piso_general2 = new THREE.CubeGeometry( 500, 900, 30 );
 
-            var barda1 = new THREE.CubeGeometry( 180, 2, 5 );
-            var barda2 = new THREE.CubeGeometry( 180, 2, 5 );
-            var barda3 = new THREE.CubeGeometry( 130, 2, 5 );
-            
+            //Bardas delanteras y algunas paredes traseras
+            var barda1 = new THREE.CubeGeometry( 180, 2, 20 );
+            var barda2 = new THREE.CubeGeometry( 180, 2, 20 );
+            var barda3 = new THREE.CubeGeometry( 130, 2, 20 );
+            var barda4 = new THREE.CubeGeometry( 60, 2, 20 );
+            var barda6 = new THREE.CubeGeometry( 130, 2, 40 );
+            var barda7 = new THREE.CubeGeometry( 270, 2, 20 );//barda trasera pequeña
+
+            var ventana1 = new THREE.CubeGeometry( 270, 2, 20 );
+
+            //tapas de cilindros
+            var tapa1 = new THREE.CylinderGeometry(22, 22, 3, 50, 50, false);
 
 
             
@@ -265,24 +267,7 @@
                 
            }
 
-           /*function crearBardas(g,tam) {
-               
-           		insertarVertice(18.713,-0.243,0,g);//0
-                insertarVertice(22.144,-0.243,0,g);//1
-                insertarVertice(21.032,6.695,0,g);//2
-
-            
-                
-
-                //insertarCara(0,3,84,g);
-                //insertarCara(0,84,81,g);
-                
-
-                g.computeFaceNormals();
-                
-                
-           }*/
-
+           
 
 
 
@@ -307,6 +292,14 @@
                             color: 0x003333
                         });
 
+            var phongBlueMaterial = new THREE.MeshPhongMaterial    ({ 
+                            ambient: 0x050505, 
+                            color: 0x0000AA, 
+                            specular: 0x555555,
+                            transparent: true, 
+                            opacity: 0.5,                             
+                            shininess: 30                       });
+
 
             // create a wireframe material
             var meshMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
@@ -318,12 +311,15 @@
            //-----------------------------------
 
            var piso_general_mesh = new THREE.Mesh( piso_general, asfalto);
-           var piso_general_mesh2 = new THREE.Mesh( piso_general2, asfalto);
+           
            piso_general_mesh.position.z -= 90;
-           piso_general_mesh.position.y += 390;
-           piso_general_mesh.rotation.z += aGrados(89);
+           piso_general_mesh.position.y += 330;
+           piso_general_mesh.rotation.z += aRadianes(50);
 
-           piso_general_mesh2.position.z -= 140;
+           var piso_general_mesh2 = piso_general_mesh.clone();
+           //piso_general_mesh.position.y -= 330;
+           piso_general_mesh2.position.y -= 400;
+           piso_general_mesh2.position.z -= 50;
 
 
             var object2 = new THREE.Mesh( geom2, cosaMaterial);
@@ -349,8 +345,8 @@
 
             var object13 = new THREE.Mesh( geom9, cosaMaterial);
             var object14 = new THREE.Mesh( geom10, cosaMaterial);
-            var object15 = new THREE.Mesh( geom11, azul);
-            var object16 = new THREE.Mesh( geom11, azul);
+            var object15 = new THREE.Mesh( geom11, phongBlueMaterial);
+            var object16 = new THREE.Mesh( geom11, phongBlueMaterial);
 
             object3.rotation.z = aRadianes(180);
             object5.rotation.z = aRadianes(180);
@@ -382,29 +378,72 @@
             object15.position.z += 25;
             object13.position.z += 34;
            
-            //pared principal salones
-            var pared1_mesh = new THREE.Mesh( pared1, cosaMaterial);
-            var pared2_mesh = new THREE.Mesh( pared2, cosaMaterial);
-           	var pared3_mesh = new THREE.Mesh( pared3, cosaMaterial);
-           	var pared4_mesh = new THREE.Mesh( pared4, cosaMaterial);
-           	var pared5_mesh = new THREE.Mesh( pared5, cosaMaterial);
-           	var pared6_mesh = new THREE.Mesh( pared6, cosaMaterial);
+              //tapas
+              var tapa1_mesh = new THREE.Mesh( tapa1, cosaMaterial);
+              tapa1_mesh.rotation.x += aRadianes(90);
+              tapa1_mesh.position.x = -132;
+            tapa1_mesh.position.y = 194;
+            tapa1_mesh.position.z = 155;
 
-           	pared2_mesh.position.y += 15;
-           	pared2_mesh.position.x += 25;
-           	//pared3_mesh.position.x += 15;
-           	//pared3_mesh.position.y += 30;
+            var tapa2_mesh = tapa1_mesh.clone();
+            tapa2_mesh.position.x = 269;
+            tapa2_mesh.position.y = -53;
+            tapa2_mesh.position.z = 75;
 
+            //Ventanas
+            var ventana1_mesh = new THREE.Mesh( ventana1, phongBlueMaterial);
 
-           	pared4_mesh.position.x += 20;
-           	pared4_mesh.position.z += 10;
-           	pared5_mesh.position.x += 20;
-           	pared6_mesh.position.y += 10;
 
            	//Barda
            	var barda1_mesh = new THREE.Mesh( barda1, cosaMaterial);
            	var barda2_mesh = new THREE.Mesh( barda2, cosaMaterial);
            	var barda3_mesh = new THREE.Mesh( barda3, cosaMaterial);
+
+            var barda4_mesh = new THREE.Mesh( barda4, cosaMaterial);
+            var barda6_mesh = new THREE.Mesh( barda6, cosaMaterial);
+            var barda7_mesh = new THREE.Mesh( barda7, cosaMaterial);
+
+            //Posicionamiento bardas
+            barda1_mesh.position.x -= 50;
+            barda1_mesh.position.y -= 152;
+            barda1_mesh.position.z -= 0;
+            barda1_mesh.rotation.z -= 1.06;
+
+            barda2_mesh.position.x -= 180;
+            barda2_mesh.position.y -= 50;
+            barda2_mesh.position.z -= 0;
+            barda2_mesh.rotation.z -= .27;
+
+            barda3_mesh.position.x += 55;
+            barda3_mesh.position.y -= 248;
+            barda3_mesh.position.z -= 0;
+            barda3_mesh.rotation.z -= .27;
+
+            //para las bardas de la parte delantera "pequenia"
+            barda4_mesh.position.x -= 20;
+            barda4_mesh.position.y -= 207;
+            barda4_mesh.position.z -= 0;
+            barda4_mesh.rotation.z -= 1.06;
+
+            barda6_mesh.position.x -= 89;
+            barda6_mesh.position.y -= 210;
+            barda6_mesh.position.z += 12;
+            barda6_mesh.rotation.z += aRadianes(30);
+
+            barda7_mesh.position.x -= 12;
+            barda7_mesh.position.y -= 278;
+            barda7_mesh.position.z += 0;
+            barda7_mesh.rotation.z -= .27;
+
+            ventana1_mesh.position.x -= 12;
+            ventana1_mesh.position.y -= 278;
+            ventana1_mesh.position.z += 10;
+            ventana1_mesh.rotation.z -= .27;
+
+
+            var barda5_mesh = barda3_mesh.clone();
+
+
 
 
             //-------------------------------
@@ -416,21 +455,73 @@
            grupo_ambos = new THREE.Object3D();
            grupo_magnas1 = new THREE.Object3D();
 
+
+           grupo_bardas_completas = new THREE.Object3D();
+           grupo_bardas_completas2 = new THREE.Object3D();
+           grupo_bardas_completas3 = new THREE.Object3D();
+
+           grupo_bardas_incompletas = new THREE.Object3D();
+
+           grupo_bardas_traseras_peque = new THREE.Object3D();
+
+           grupo_bardas_completas.add(barda1_mesh);
+           grupo_bardas_completas.add(barda2_mesh);
+           grupo_bardas_completas.add(barda3_mesh);
+
+           grupo_bardas_incompletas.add(barda5_mesh);
+           grupo_bardas_incompletas.add(barda4_mesh);
+
+           grupo_bardas_traseras_peque.add(barda6_mesh);
+           grupo_bardas_traseras_peque.add(barda7_mesh);
+           grupo_bardas_traseras_peque.add(ventana1_mesh);
+
+           //-------Estos son para rotar las bardas----
+           grupo_bardas_completas.rotation.z += aRadianes(180);
+           grupo_bardas_completas.position.y -= 100;
+           grupo_bardas_completas.position.z += 7;
+           grupo_bardas_completas2 = grupo_bardas_completas.clone();
+           grupo_bardas_completas3 = grupo_bardas_completas.clone();
+
+
+           grupo_bardas_incompletas.rotation.z += aRadianes(180);
+           grupo_bardas_incompletas.position.y -= 100;
+           grupo_bardas_incompletas.position.z += 7;
+
+           grupo_bardas_traseras_peque.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_peque.position.y -= 100;
+           grupo_bardas_traseras_peque.position.z += 7;
+           grupo_bardas_traseras_peque.position.z += 80;
+           
+
+           grupo_bardas_completas2.position.z -= 40;
+           grupo_bardas_completas3.position.z += 40;
+
+           grupo_bardas_incompletas.position.z += 80;
+           //-------------------------
+
+
            grupo_edificio1.add(object2);
            grupo_edificio1.add(object4);
            grupo_edificio1.add(object6);
            grupo_edificio1.add(object8);
            grupo_edificio1.add(object9);
-           //grupo_edificio1.add(barda1_mesh);
+           grupo_edificio1.add(piso_general_mesh);
+           grupo_edificio1.add(tapa1_mesh);
+           grupo_edificio1.add(tapa2_mesh);
 
+           grupo_edificio2.add(piso_general_mesh2);
            grupo_edificio2.add(object3);
            grupo_edificio2.add(object5);
            grupo_edificio2.add(object7);
            grupo_edificio2.add(object10);
            grupo_edificio2.add(object11);
-           grupo_edificio2.add(barda1_mesh);
-           grupo_edificio2.add(barda2_mesh);
-           grupo_edificio2.add(barda3_mesh);
+
+           grupo_edificio1.add(grupo_bardas_completas);
+           grupo_edificio1.add(grupo_bardas_completas2);
+           grupo_edificio1.add(grupo_bardas_completas3);
+           grupo_edificio1.add(grupo_bardas_incompletas);
+            grupo_edificio1.add(grupo_bardas_traseras_peque);
+           
            
            
 
@@ -471,7 +562,7 @@
             grupo_magnas10.position.z = 40;
 
             var grupo_magnas11 = grupo_magnas1.clone();
-            grupo_magnas11.position.x = -248;
+            grupo_magnas11.position.x = -448;
             grupo_magnas11.position.y = 72;
             grupo_magnas11.position.z = -80;
             var grupo_magnas12 = grupo_magnas11.clone();
@@ -499,29 +590,52 @@
             grupo_magnas17.position.z = 40;
             grupo_magnas18.position.z = 80;
 
+            grupo_edificio1.add(grupo_magnas1);
+            grupo_edificio1.add(grupo_magnas2);
+            grupo_edificio1.add(grupo_magnas3);
+            grupo_edificio1.add(grupo_magnas4);
+            grupo_edificio1.add(grupo_magnas5);
+            grupo_edificio1.add(grupo_magnas6);
+            
+            grupo_edificio1.add(grupo_magnas7);
+
+            grupo_edificio1.add(grupo_magnas8);
+            grupo_edificio1.add(grupo_magnas9);
+            grupo_edificio1.add(grupo_magnas10);
+
+
+            //Aulas magnas edificio 2
+            grupo_edificio2.add(grupo_magnas11);
+            grupo_edificio2.add(grupo_magnas12);
+            grupo_edificio2.add(grupo_magnas13);
+            grupo_edificio2.add(grupo_magnas20);
+
+
+            grupo_edificio2.add(grupo_magnas14);//seguro aulas 2
+            grupo_edificio2.add(grupo_magnas15);//seg
+            grupo_edificio2.add(grupo_magnas16);//seg
+            grupo_edificio2.add(grupo_magnas17);//seg
+            grupo_edificio2.add(grupo_magnas18);//seg
+            grupo_edificio2.add(grupo_magnas19);
+
+
+            grupo_ambos.add(grupo_edificio1);
+            //grupo_ambos.add(grupo_edificio2);
+
+            grupo_ambos.rotation.x += aRadianes(-90);
+
+            scene.add(grupo_ambos);
+
+            
 
 
             
             
            
 
-            //Posicionamiento bardas
-            barda1_mesh.position.x -= 50;
-            barda1_mesh.position.y -= 152;
-            barda1_mesh.position.z += 2;
-            barda1_mesh.rotation.z -= 1.06;
-
-            barda2_mesh.position.x -= 180;
-            barda2_mesh.position.y -= 50;
-            barda2_mesh.position.z += 2;
-            barda2_mesh.rotation.z -= .27;
-
-            barda3_mesh.position.x += 55;
-            barda3_mesh.position.y -= 248;
-            barda3_mesh.position.z += 2;
-            barda3_mesh.rotation.z -= .27;
-
-            var barda4_mesh = barda3_mesh.clone();
+            
+            //Esto era para las bardas del edificio 2
+            /*var barda4_mesh = barda3_mesh.clone();
             var barda5_mesh = barda3_mesh.clone();
             var barda6_mesh = barda3_mesh.clone();
 
@@ -548,7 +662,7 @@
 
             var barda7_mesh = barda3_mesh.clone();
             var barda8_mesh = barda3_mesh.clone();
-            var barda9_mesh = barda3_mesh.clone();
+            var barda9_mesh = barda3_mesh.clone();*/
           
            
 
@@ -648,50 +762,23 @@
             scene.add(pointLight2);
             scene.add( light );
 
-            scene.add(piso_general_mesh);
+            //scene.add(piso_general_mesh);
 
-            scene.add(piso_general_mesh2);
+            //scene.add(piso_general_mesh2);
 
-            //paredes
-            scene.add( pared1_mesh );
-            scene.add( pared2_mesh );
-            scene.add( pared3_mesh );
-            scene.add( pared4_mesh );
-            scene.add( pared5_mesh );
-            scene.add( pared6_mesh );
             
-            //scene.add(object2);
-            scene.add(grupo_edificio1);
-            scene.add(grupo_edificio2);
+            
 
 
 
             scene.add(grupo_ambos);
-            scene.add(grupo_magnas1);
-            scene.add(grupo_magnas2);
-            scene.add(grupo_magnas3);
-            scene.add(grupo_magnas4);
-            scene.add(grupo_magnas5);
-            scene.add(grupo_magnas6);
-            scene.add(grupo_magnas19);
-            scene.add(grupo_magnas20);
-
-            scene.add(grupo_magnas7);
-            scene.add(grupo_magnas8);
-            scene.add(grupo_magnas9);
-            scene.add(grupo_magnas10);
             
-            scene.add(grupo_magnas11);
-            scene.add(grupo_magnas12);
-            scene.add(grupo_magnas13);
+            
 
-            //grupo de aulas magnas de 6 pisos aulas 2
-            scene.add(grupo_magnas14);
-            scene.add(grupo_magnas15);
-            scene.add(grupo_magnas16);
-            scene.add(grupo_magnas17);
-            scene.add(grupo_magnas18);
-            scene.add(grupo_magnas19);
+           
+            
+            
+           
             
 
             grupo_edificio2.position.y += 118;
@@ -717,7 +804,7 @@
 
            //camera.rotation.x = 90;
             
-        camera.rotation.z+= (aRadianes(90));
+        //camera.rotation.z+= (aRadianes(90));
             var render = function () { 
                	//console.log("x:" + camera.position.x+" y: "+camera.position.y+" z:"+camera.position.z);
                	//console.log(cam_ypos);

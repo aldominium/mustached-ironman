@@ -1,0 +1,407 @@
+
+<!-- Aldo Olivares Dominguez A01096624 y Martin Granados Garcia -->
+<!-- Graficas computacionales -->
+<html> 
+    <head> 
+        <title> Defining a 3D Shape </title> 
+        <style> 
+            canvas { width: 100%; height: 100% }
+        </style> 
+    </head> 
+    <body> 
+        <script src="three.min.js"> </script> 
+        
+        <script> 
+
+            window.addEventListener('keydown',doKeyDown,true); 
+            var cam_zpos = 10.0;
+            var cam_xpos = 0.0;
+            var Pi = 3.1415926535;
+            var ang_rad = 0;
+            var up_down_ang = 0;           
+
+            function doKeyDown(evt){
+                console.log("Tecla picada: "+evt.keyCode);
+                switch (evt.keyCode) {
+                    case 38:  /* Up arrow was pressed */                        
+                        var dx = 0.5 * Math.sin(ang_rad); 
+                        var dz = 0.5 * Math.cos(ang_rad); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;
+                        break;
+                    case 40:  /* Down arrow was pressed */
+                        var dx = 0.5 * Math.sin(ang_rad); 
+                        var dz = 0.5 * Math.cos(ang_rad); 
+                        cam_zpos += dz;
+                        cam_xpos += dx;
+                        break;
+                    case 37:  /* Left arrow was pressed */
+                        ang_rad += (5* Pi / 180);                        
+                        break;
+                    case 39:  /* Right arrow was pressed */
+                        ang_rad -= (5* Pi / 180);
+                    break;
+                    case 87:  /* W was pressed */
+                        camera.position.y += 0.5;                        
+                    break;
+                    case 83:  /* S was pressed */
+                        camera.position.y -= 0.5;                        
+                    break;
+                    case 65:  /* A was pressed */                        
+                        var dx = 0.5 * Math.sin(ang_rad+(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad+(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;
+                    break;
+                    case 68:  /* D was pressed */
+                        var dx = 0.5 * Math.sin(ang_rad-(Pi/2)); 
+                        var dz = 0.5 * Math.cos(ang_rad-(Pi/2)); 
+                        cam_zpos -= dz;
+                        cam_xpos -= dx;                   
+                    break;
+                    case 82:  /* R was pressed */
+                    break;
+                    case 70:  /* F was pressed */
+                    break;
+                }
+            }
+            // three basic components of a scene
+            var scene = new THREE.Scene(); 
+            var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.01, 1000); 
+            var renderer = new THREE.WebGLRenderer(); 
+
+
+            /*
+                Creacion de las geometrias
+            */
+
+            var geom_pisocompleto1 = new THREE.Geometry();
+            crearPisoCompleto(geom_pisocompleto1);
+
+            var radius = 10.0;
+            // Cambiar estos dos valores para apreciar mejor las diferencias
+            var segments = 8;
+            var rings = 8;
+
+            var lambMaterial = new THREE.MeshLambertMaterial    ({
+                            color: 0xFF0000                     });
+
+            var phongMaterial = new THREE.MeshPhongMaterial     ({ 
+                            color: 0xFF0000                     });
+
+            
+
+            var phong2Material = new THREE.MeshPhongMaterial    ({ 
+                            ambient: 0x050505, 
+                            color: 0xFF0000, 
+                            specular: 0x555555,
+                            transparent: true, 
+                            opacity: 0.5,                             
+                            shininess: 30                       });
+
+            var transMaterial = new THREE.MeshBasicMaterial     ({ 
+                            color: 0xff0000, 
+                            transparent: true, 
+                            opacity: 0.5                        });
+
+
+            
+            var sphere0 = new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    radius,
+                    segments,
+                    rings),
+                lambMaterial
+            );
+
+            scene.add(sphere0);
+            
+
+
+            
+            //---------------------
+           //------Funciones de creacion de geometrias
+           //----------------------
+            function crearPisoCompleto (g) {
+                insertarVertice(-14.1,0,-17.3,g);//0
+                insertarVertice(.6,0,-13.1,g);//1
+                insertarVertice(3.4,0,-8.0,g);//2
+                insertarVertice(9.4,0,+2.7,g);//3
+                insertarVertice(26.5,0,+7.3,g);//4
+                insertarVertice(27.3,0,3.0,g);//5
+                insertarVertice(12.4,0,-1.1,g);//6
+                insertarVertice(7.1,0,-10.1,g);//7
+                insertarVertice(14.2,0,-14.1,g);//8
+                insertarVertice(-12.9,0,-21.7,g);//9
+
+
+          
+                insertarCara(9,8,0,g);
+                insertarCara(8,1,0,g);
+
+                insertarCara(8,2,1,g);
+                insertarCara(7,3,2,g);
+
+                insertarCara(7,6,3,g);
+                insertarCara(3,5,4,g);
+
+                insertarCara(6,5,3,g);
+                insertarCara(4,3,5,g);
+
+                
+
+                g.computeFaceNormals();
+           }
+
+           function crearPisoMitad (g) {
+                insertarVertice(-141,173,0,g);//0
+                insertarVertice(6,131,0,g);//1
+                insertarVertice(34,80,0,g);//2
+                insertarVertice(142,141,0,g);//3
+                insertarVertice(-129,217,0,g);//4
+
+          
+                insertarCara(0,4,3,g);
+                insertarCara(0,3,1,g);
+                insertarCara(1,3,2,g);
+
+                insertarVertice(-141,173,-3,g);//5
+                insertarVertice(6,131,-3,g);//6
+                insertarVertice(34,80,-3,g);//7
+                insertarVertice(142,141,-3,g);//8
+                insertarVertice(-129,217,-3,g);//9
+
+                insertarCara(5,8,9,g);
+                insertarCara(5,6,8,g);
+                insertarCara(6,7,8,g);
+
+
+          
+                insertarCara(4,0,5,g);
+                insertarCara(4,5,9,g);
+
+                insertarCara(3,4,9,g);
+                insertarCara(3,9,8,g);
+
+                insertarCara(2,3,8,g);
+                insertarCara(2,8,7,g);
+
+                insertarCara(1,2,7,g);
+                insertarCara(1,7,6,g);
+
+                insertarCara(0,1,6,g);
+                insertarCara(0,6,5,g);
+
+
+                
+                
+
+                g.computeFaceNormals();
+           }
+
+          
+
+           function crearAulasMagnasBase(g,tam) {
+               
+
+                insertarVertice(18.713,-0.243,0,g);//0
+                insertarVertice(22.144,-0.243,0,g);//1
+                insertarVertice(21.032,6.695,0,g);//2
+                insertarVertice(17.958,5.546,0,g);//3
+                aumento = 0;
+                for(var i = 0;i<19;i++){
+                	rotarVertices(18.713,-0.243,0,18+aumento,g);//0
+                	rotarVertices(22.144,-0.243,0,18+aumento,g);//1
+                	rotarVertices(21.032,6.695,0,18+aumento,g);//2
+                	rotarVertices(17.958,5.546,0,18+aumento,g);//3
+                	aumento+=18;
+                }
+                //console.log("vertices: "+ g.vertices.length);
+                aumento = 0;
+                for(var i = 0;i<20;i++){
+                	insertarCara(0+aumento,1+aumento,2+aumento,g);
+                	insertarCara(0+aumento,2+aumento,3+aumento,g);
+                	aumento += 4;
+                }
+
+                
+               
+                
+
+                g.computeFaceNormals();
+                
+                
+           }
+
+           
+
+
+
+
+                
+            //---------------------------------
+            //---------Materiales
+            //---------------------------------
+
+            // create a Lambert material
+           
+            var cosaMaterial = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0xffffff
+                        });
+            var azul = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0x0000ff
+                        });
+
+            var asfalto = new THREE.MeshLambertMaterial(
+                        {
+                            color: 0x003333
+                        });
+
+
+            // create a wireframe material
+            var meshMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+
+            
+
+            //-----------------------------------
+           //-------------Creacion de los mesh
+           //-----------------------------------
+
+           var mesh_pisocompleto = new THREE.Mesh( geom_pisocompleto1, asfalto);
+           
+
+
+            //-------------------------------
+           //--------Grupos
+           //--------------------------------
+
+           grupo_edificio1 = new THREE.Object3D();
+
+           //---------------------------------
+            //---------LUCES
+            //---------------------------------
+
+            // create some point lights
+            var pointLight = new THREE.PointLight( 0xFFFFFF );
+            var pointLight2 = new THREE.PointLight( 0xFFFFFF );
+            var light = new THREE.AmbientLight( 0x999999 ); // soft white light
+            
+
+            // set its position
+            pointLight.position.x = 10;
+            pointLight.position.y = 50;
+            pointLight.position.z = 500;
+
+           
+            
+            
+            // set its position
+            pointLight2.position.x = 10;
+            pointLight2.position.y = -50;
+            pointLight2.position.z = -500;
+
+            //-------------------------------
+           //--------ADDERS
+           //--------------------------------
+
+            // add to the scene
+            scene.add(pointLight);
+            scene.add(pointLight2);
+            scene.add(light);
+            scene.add(mesh_pisocompleto);
+           
+           
+          
+           
+
+
+           //-------------------------------
+           //--------Funciones de ayuda
+           //--------------------------------
+           function insertarVertice(x,y,z,g){
+                
+                g.vertices.push(new THREE.Vector3( x,  y, z));
+
+            }
+
+            function insertarCara(x,y,z,g){
+                
+                g.faces.push( new THREE.Face3( x,y,z ) );
+
+            }  
+
+            function aGrados(radianes){
+                return radianes * 180 / Math.PI;
+            }
+
+            function aRadianes(degrees) {
+              return degrees * Math.PI / 180;
+            }
+
+            function rotarVertices(x,y,z,theta,g){
+                x2 = x*Math.cos(aRadianes(theta)) - y*Math.sin(aRadianes(theta));
+                y2 = x*Math.sin(aRadianes(theta)) + y*Math.cos(aRadianes(theta));
+
+                insertarVertice(x2,y2,z,g);
+            }
+
+
+
+            function rotar90 (x,y,z,g) {
+                g.vertices.push(-y,x,z);
+            }
+            function rotar180 (x,y,z,g) {
+                g.vertices.push(-x,-y,z,g);
+            }
+
+            function clonarAbajo(g,profundidad,tam) {
+                longitud_vertices = g.vertices.length;
+                longitud_faces = g.faces.length;
+                for(var i = 0; i<longitud_vertices;i++){
+                    insertarVertice(g.vertices[i].x,profundidad,g.vertices[i].y,g);
+                    //console.log("x:"+g.vertices[i].x+"y:"+g.vertices[i].y+" p:"+profundidad);
+                }
+                for(var i = 0; i<longitud_faces;i++){
+                    insertarCara(g.faces[i].a+tam,g.faces[i].c+tam,g.faces[i].b+tam,g);
+                    console.log("gh");
+                }
+            }
+
+                              
+            
+            renderer.setSize(window.innerWidth, window.innerHeight); 
+            document.body.appendChild(renderer.domElement); 
+
+
+            //-------------------------------
+           //--------RENDER
+           //--------------------------------
+            // set the background color
+            renderer.setClearColor(0x000022, 1);
+
+           //camera.rotation.x = 90;
+            
+        camera.rotation.z+= (aRadianes(90));
+            var render = function () { 
+               	
+                requestAnimationFrame(render); 
+                
+
+                
+                camera.position.x = cam_xpos;
+                camera.position.z = cam_zpos;
+                camera.rotation.y = ang_rad;
+              
+            
+                
+                
+                renderer.render(scene, camera); 
+            }; 
+            render();
+
+
+        </script> 
+    </body> 
+</html>
