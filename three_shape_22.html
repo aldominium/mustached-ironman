@@ -437,7 +437,7 @@
 
             ventana1_mesh.position.x -= 12;
             ventana1_mesh.position.y -= 278;
-            ventana1_mesh.position.z += 10;
+            ventana1_mesh.position.z += 20;
             ventana1_mesh.rotation.z -= .27;
 
 
@@ -462,7 +462,11 @@
 
            grupo_bardas_incompletas = new THREE.Object3D();
 
-           grupo_bardas_traseras_peque = new THREE.Object3D();
+           var grupo_bardas_traseras_peque = new THREE.Object3D();
+           var grupo_bardas_traseras_peque2 = new THREE.Object3D();
+           var grupo_bardas_traseras_peque3 = new THREE.Object3D();
+           var grupo_bardas_traseras_peque4 = new THREE.Object3D();
+           var grupo_bardas_traseras_peque5 = new THREE.Object3D();
 
            grupo_bardas_completas.add(barda1_mesh);
            grupo_bardas_completas.add(barda2_mesh);
@@ -474,6 +478,18 @@
            grupo_bardas_traseras_peque.add(barda6_mesh);
            grupo_bardas_traseras_peque.add(barda7_mesh);
            grupo_bardas_traseras_peque.add(ventana1_mesh);
+
+           grupo_bardas_traseras_peque2.add(barda7_mesh.clone());
+           grupo_bardas_traseras_peque2.add(ventana1_mesh.clone());
+           grupo_bardas_traseras_peque3.add(barda7_mesh.clone());
+           grupo_bardas_traseras_peque3.add(ventana1_mesh.clone());
+           grupo_bardas_traseras_peque4.add(barda7_mesh.clone());
+           grupo_bardas_traseras_peque4.add(ventana1_mesh.clone());
+           grupo_bardas_traseras_peque5.add(barda7_mesh.clone());
+           grupo_bardas_traseras_peque5.add(ventana1_mesh.clone());
+
+
+
 
            //-------Estos son para rotar las bardas----
            grupo_bardas_completas.rotation.z += aRadianes(180);
@@ -491,7 +507,29 @@
            grupo_bardas_traseras_peque.position.y -= 100;
            grupo_bardas_traseras_peque.position.z += 7;
            grupo_bardas_traseras_peque.position.z += 80;
+
+           grupo_bardas_traseras_peque2.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_peque2.position.y -= 100;
+           grupo_bardas_traseras_peque2.position.z -= 33;
+           grupo_bardas_traseras_peque2.position.z += 80;
+
+           grupo_bardas_traseras_peque3.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_peque3.position.y -= 100;
+           grupo_bardas_traseras_peque3.position.z -= 70;
+           grupo_bardas_traseras_peque3.position.z += 80;
+
+           grupo_bardas_traseras_peque4.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_peque4.position.y -= 100;
+           grupo_bardas_traseras_peque4.position.z -= 112;
+           grupo_bardas_traseras_peque4.position.z += 80;
+
+           grupo_bardas_traseras_peque5.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_peque5.position.y -= 100;
+           grupo_bardas_traseras_peque5.position.z -= 153;
+           grupo_bardas_traseras_peque5.position.z += 80;
+
            
+           //-----------------------
 
            grupo_bardas_completas2.position.z -= 40;
            grupo_bardas_completas3.position.z += 40;
@@ -520,7 +558,12 @@
            grupo_edificio1.add(grupo_bardas_completas2);
            grupo_edificio1.add(grupo_bardas_completas3);
            grupo_edificio1.add(grupo_bardas_incompletas);
-            grupo_edificio1.add(grupo_bardas_traseras_peque);
+           grupo_edificio1.add(grupo_bardas_traseras_peque);
+           grupo_edificio1.add(grupo_bardas_traseras_peque2);
+           grupo_edificio1.add(grupo_bardas_traseras_peque3);
+           grupo_edificio1.add(grupo_bardas_traseras_peque4);
+           grupo_edificio1.add(grupo_bardas_traseras_peque5);
+           
            
            
            
