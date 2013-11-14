@@ -1,5 +1,5 @@
 
-<!-- Aldo Olivares Dominguez A01096624 y Martin Granados Garcia -->
+<!-- Aldo Olivares Dominguez A01096624 -->
 <!-- Graficas computacionales -->
 <html> 
     <head> 
@@ -109,6 +109,9 @@
             /*var geom3 = new THREE.Geometry();
             crearPisoCompleto(geom3);*/
 
+            var geom_dae = new THREE.Geometry();
+            crearDae(geom_dae);
+
             
 
             //Pisos de la base del campus
@@ -120,10 +123,17 @@
             var barda2 = new THREE.CubeGeometry( 180, 2, 20 );
             var barda3 = new THREE.CubeGeometry( 130, 2, 20 );
             var barda4 = new THREE.CubeGeometry( 60, 2, 20 );
-            var barda6 = new THREE.CubeGeometry( 130, 2, 40 );
-            var barda7 = new THREE.CubeGeometry( 270, 2, 20 );//barda trasera pequeña
+
+            var barda6 = new THREE.CubeGeometry( 130, 2, 40 );//Barda trasera lateral pequeña
+            var barda7 = new THREE.CubeGeometry( 270, 2, 20 );//barda trasera larga
+
+            var barda8 = new THREE.CubeGeometry( 83, 2, 200 );//Barda trasera lateral grande
+
+            var barda9 = new THREE.CubeGeometry( 160, 2, 20 );//Barda trasera larga2
+
 
             var ventana1 = new THREE.CubeGeometry( 270, 2, 20 );
+            var ventana2 = new THREE.CubeGeometry( 160, 2, 20 );
 
             //tapas de cilindros
             var tapa1 = new THREE.CylinderGeometry(22, 22, 3, 50, 50, false);
@@ -267,6 +277,41 @@
                 
            }
 
+           function crearDae(g){
+                insertarVertice(43.72,-54.13,0,g);
+                insertarVertice(90.97,-27.34,0,g);
+                insertarVertice(55.64,35,0,g);
+                insertarVertice(40.86,26.31,0,g);
+                insertarVertice(45.35,7.73,0,g);
+                insertarVertice(39.92,-10.67,0,g);
+                insertarVertice(26.04,-23.92,0,g);
+
+                insertarCara(1,6,0,g);
+                for(i = 4;i>0;i--){
+                    insertarCara(1,i+1,i+2,g);
+                }
+
+                clonarAbajo(g,-20,g.vertices.length);
+
+                
+                //----laterales
+                for(var i = 0;i<6;i++){
+
+                    insertarCara(0+i,7+i,8+i,g);
+                    insertarCara(0+i,8+i,1+i,g);
+                   
+                    
+
+                }
+
+                insertarCara(6,13,7,g);
+                insertarCara(6,7,0,g);
+                //-------
+
+                g.computeFaceNormals();
+
+           }
+
            
 
 
@@ -309,6 +354,8 @@
             //-----------------------------------
            //-------------Creacion de los mesh
            //-----------------------------------
+
+           var dae_mesh = new THREE.Mesh( geom_dae, cosaMaterial);
 
            var piso_general_mesh = new THREE.Mesh( piso_general, asfalto);
            
@@ -392,7 +439,7 @@
 
             //Ventanas
             var ventana1_mesh = new THREE.Mesh( ventana1, phongBlueMaterial);
-
+            var ventana2_mesh = new THREE.Mesh( ventana2, phongBlueMaterial);
 
            	//Barda
            	var barda1_mesh = new THREE.Mesh( barda1, cosaMaterial);
@@ -402,6 +449,8 @@
             var barda4_mesh = new THREE.Mesh( barda4, cosaMaterial);
             var barda6_mesh = new THREE.Mesh( barda6, cosaMaterial);
             var barda7_mesh = new THREE.Mesh( barda7, cosaMaterial);
+            var barda8_mesh = new THREE.Mesh( barda8, cosaMaterial);
+            var barda9_mesh = new THREE.Mesh( barda9, cosaMaterial);
 
             //Posicionamiento bardas
             barda1_mesh.position.x -= 50;
@@ -435,10 +484,25 @@
             barda7_mesh.position.z += 0;
             barda7_mesh.rotation.z -= .27;
 
+            barda8_mesh.position.x -= 107;
+            barda8_mesh.position.y -= 220;
+            barda8_mesh.position.z -= 75;
+            barda8_mesh.rotation.z += aRadianes(30);
+
+            barda9_mesh.position.x -= 200;
+            barda9_mesh.position.y -= 90;
+            barda9_mesh.position.z -= 80;
+            barda9_mesh.rotation.z -= .27;
+
             ventana1_mesh.position.x -= 12;
             ventana1_mesh.position.y -= 278;
             ventana1_mesh.position.z += 20;
             ventana1_mesh.rotation.z -= .27;
+
+            ventana2_mesh.position.x -= 200;
+            ventana2_mesh.position.y -= 90;
+            ventana2_mesh.position.z -= 60;
+            ventana2_mesh.rotation.z -= .27;
 
 
             var barda5_mesh = barda3_mesh.clone();
@@ -468,17 +532,22 @@
            var grupo_bardas_traseras_peque4 = new THREE.Object3D();
            var grupo_bardas_traseras_peque5 = new THREE.Object3D();
 
+           var grupo_bardas_traseras_grandes = new THREE.Object3D();
+
            grupo_bardas_completas.add(barda1_mesh);
            grupo_bardas_completas.add(barda2_mesh);
            grupo_bardas_completas.add(barda3_mesh);
 
+           //bardas del quinto piso que se quedan cortadas
            grupo_bardas_incompletas.add(barda5_mesh);
            grupo_bardas_incompletas.add(barda4_mesh);
 
            grupo_bardas_traseras_peque.add(barda6_mesh);
            grupo_bardas_traseras_peque.add(barda7_mesh);
+           grupo_bardas_traseras_peque.add(barda8_mesh);
            grupo_bardas_traseras_peque.add(ventana1_mesh);
 
+           //Para clonar las bardas traseras pequeñas hacia abajo
            grupo_bardas_traseras_peque2.add(barda7_mesh.clone());
            grupo_bardas_traseras_peque2.add(ventana1_mesh.clone());
            grupo_bardas_traseras_peque3.add(barda7_mesh.clone());
@@ -488,7 +557,9 @@
            grupo_bardas_traseras_peque5.add(barda7_mesh.clone());
            grupo_bardas_traseras_peque5.add(ventana1_mesh.clone());
 
-
+           grupo_bardas_traseras_grandes.add(barda9_mesh);
+           grupo_bardas_traseras_grandes.add(ventana2_mesh);
+        
 
 
            //-------Estos son para rotar las bardas----
@@ -528,6 +599,12 @@
            grupo_bardas_traseras_peque5.position.z -= 153;
            grupo_bardas_traseras_peque5.position.z += 80;
 
+
+           grupo_bardas_traseras_grandes.rotation.z += aRadianes(180);
+           grupo_bardas_traseras_grandes.position.y -= 100;
+           grupo_bardas_traseras_grandes.position.z -= 33;
+           grupo_bardas_traseras_grandes.position.z += 80;
+
            
            //-----------------------
 
@@ -536,6 +613,24 @@
 
            grupo_bardas_incompletas.position.z += 80;
            //-------------------------
+
+           //-----clonaciones de bardas traseras
+           //----
+        var grupo_bardas_traseras_grandes2 = (grupo_bardas_traseras_grandes.clone());
+        var grupo_bardas_traseras_grandes3 = (grupo_bardas_traseras_grandes.clone());
+
+        grupo_bardas_traseras_grandes2.position.z -= 40;
+        grupo_bardas_traseras_grandes3.position.z += 40;
+
+        var grupo_bardas_traseras_medianas = (grupo_bardas_traseras_grandes3.clone());
+        grupo_bardas_traseras_medianas.position.z += 40;
+        grupo_bardas_traseras_medianas.scale.x = .61;
+        grupo_bardas_traseras_medianas.position.y += 160;
+        grupo_bardas_traseras_medianas.position.x -= 58;
+        grupo_bardas_traseras_medianas.rotation.z += aRadianes(-36);
+
+
+           //-----
 
 
            grupo_edificio1.add(object2);
@@ -563,7 +658,13 @@
            grupo_edificio1.add(grupo_bardas_traseras_peque3);
            grupo_edificio1.add(grupo_bardas_traseras_peque4);
            grupo_edificio1.add(grupo_bardas_traseras_peque5);
-           
+           grupo_edificio1.add(grupo_bardas_traseras_grandes);
+           grupo_edificio1.add(grupo_bardas_traseras_grandes2);
+           grupo_edificio1.add(grupo_bardas_traseras_grandes3);
+           grupo_edificio1.add(grupo_bardas_traseras_medianas);
+
+           dae_mesh.position.x-= 100;
+           grupo_edificio1.add(dae_mesh);
            
            
            
