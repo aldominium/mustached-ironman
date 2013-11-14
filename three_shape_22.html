@@ -112,6 +112,9 @@
             var geom_dae = new THREE.Geometry();
             crearDae(geom_dae);
 
+            var geom_dae2 = new THREE.Geometry();
+            crearDae2(geom_dae2);
+
             
 
             //Pisos de la base del campus
@@ -130,6 +133,8 @@
             var barda8 = new THREE.CubeGeometry( 83, 2, 200 );//Barda trasera lateral grande
 
             var barda9 = new THREE.CubeGeometry( 160, 2, 20 );//Barda trasera larga2
+
+            var barandal = new THREE.CubeGeometry( 160, 2, 5 );
 
 
             var ventana1 = new THREE.CubeGeometry( 270, 2, 20 );
@@ -291,7 +296,7 @@
                     insertarCara(1,i+1,i+2,g);
                 }
 
-                clonarAbajo(g,-20,g.vertices.length);
+                clonarAbajo(g,-3,g.vertices.length);
 
                 
                 //----laterales
@@ -312,6 +317,40 @@
 
            }
 
+           function crearDae2(g){
+                insertarVertice(35.40,-40,0,g);
+                insertarVertice(83.33,-13.45,0,g);
+                insertarVertice(55.64,35,0,g);
+                insertarVertice(40.86,26.31,0,g);
+                insertarVertice(45.35,7.73,0,g);
+                insertarVertice(39.92,-10.67,0,g);
+                insertarVertice(26.04,-23.92,0,g);
+
+                insertarCara(1,6,0,g);
+                for(i = 4;i>0;i--){
+                    insertarCara(1,i+1,i+2,g);
+                }
+
+                clonarAbajo(g,-3,g.vertices.length);
+
+                
+                //----laterales
+                for(var i = 0;i<6;i++){
+
+                    insertarCara(0+i,7+i,8+i,g);
+                    insertarCara(0+i,8+i,1+i,g);
+                   
+                    
+
+                }
+
+                insertarCara(6,13,7,g);
+                insertarCara(6,7,0,g);
+                //-------
+
+                g.computeFaceNormals();
+
+           }
            
 
 
@@ -323,7 +362,7 @@
 
             // create a Lambert material
            
-            var cosaMaterial = new THREE.MeshLambertMaterial(
+            var cosaMaterial = new THREE.MeshPhongMaterial(
                         {
                             color: 0xffffff
                         });
@@ -356,6 +395,7 @@
            //-----------------------------------
 
            var dae_mesh = new THREE.Mesh( geom_dae, cosaMaterial);
+           var dae_mesh_chico = new THREE.Mesh( geom_dae2, cosaMaterial);
 
            var piso_general_mesh = new THREE.Mesh( piso_general, asfalto);
            
@@ -445,6 +485,7 @@
            	var barda1_mesh = new THREE.Mesh( barda1, cosaMaterial);
            	var barda2_mesh = new THREE.Mesh( barda2, cosaMaterial);
            	var barda3_mesh = new THREE.Mesh( barda3, cosaMaterial);
+            var barandal_mesh = new THREE.Mesh( barandal, cosaMaterial);
 
             var barda4_mesh = new THREE.Mesh( barda4, cosaMaterial);
             var barda6_mesh = new THREE.Mesh( barda6, cosaMaterial);
@@ -467,6 +508,11 @@
             barda3_mesh.position.y -= 248;
             barda3_mesh.position.z -= 0;
             barda3_mesh.rotation.z -= .27;
+
+            barandal_mesh.position.x -= 175;
+            barandal_mesh.position.y -= 50;
+            barandal_mesh.position.z -= 25;
+            barandal_mesh.rotation.z -= .27;
 
             //para las bardas de la parte delantera "pequenia"
             barda4_mesh.position.x -= 20;
@@ -518,6 +564,10 @@
            grupo_edificio2 = new THREE.Object3D();
            grupo_ambos = new THREE.Object3D();
            grupo_magnas1 = new THREE.Object3D();
+           grupo_DAE = new THREE.Object3D();
+           grupo_mitad1_DAE = new THREE.Object3D();
+           grupo_mitad2_DAE = new THREE.Object3D();
+
 
 
            grupo_bardas_completas = new THREE.Object3D();
@@ -534,9 +584,15 @@
 
            var grupo_bardas_traseras_grandes = new THREE.Object3D();
 
-           grupo_bardas_completas.add(barda1_mesh);
+           //grupo_bardas_completas.add(barda1_mesh);
            grupo_bardas_completas.add(barda2_mesh);
            grupo_bardas_completas.add(barda3_mesh);
+
+           grupo_bardas_completas3.add(barandal_mesh);
+           var grupo_bardas_completas4 = (grupo_bardas_completas3.clone());
+           grupo_bardas_completas4.position.y += 40;
+           grupo_bardas_completas4.position.z += 60;
+           grupo_bardas_completas4.position.x += 20;
 
            //bardas del quinto piso que se quedan cortadas
            grupo_bardas_incompletas.add(barda5_mesh);
@@ -567,7 +623,16 @@
            grupo_bardas_completas.position.y -= 100;
            grupo_bardas_completas.position.z += 7;
            grupo_bardas_completas2 = grupo_bardas_completas.clone();
-           grupo_bardas_completas3 = grupo_bardas_completas.clone();
+           
+
+           grupo_bardas_completas3.rotation.z += aRadianes(180);
+           grupo_bardas_completas3.position.y -= 100;
+           grupo_bardas_completas3.position.z += 7;
+
+           grupo_bardas_completas4.rotation.z += aRadianes(180);
+           grupo_bardas_completas4.position.y -= 100;
+           grupo_bardas_completas4.position.z += 7;
+
 
 
            grupo_bardas_incompletas.rotation.z += aRadianes(180);
@@ -609,9 +674,15 @@
            //-----------------------
 
            grupo_bardas_completas2.position.z -= 40;
-           grupo_bardas_completas3.position.z += 40;
+           grupo_bardas_completas3.position.z += 60;
 
            grupo_bardas_incompletas.position.z += 80;
+           var grupo_bardas_incompletas2 = grupo_bardas_incompletas.clone();
+           var grupo_bardas_incompletas3 = grupo_bardas_incompletas.clone();
+           var grupo_bardas_incompletas4 = grupo_bardas_incompletas.clone();
+           grupo_bardas_incompletas2.position.z -= 40;
+           grupo_bardas_incompletas3.position.z -= 80;
+           grupo_bardas_incompletas4.position.z -= 120;
            //-------------------------
 
            //-----clonaciones de bardas traseras
@@ -623,10 +694,10 @@
         grupo_bardas_traseras_grandes3.position.z += 40;
 
         var grupo_bardas_traseras_medianas = (grupo_bardas_traseras_grandes3.clone());
-        grupo_bardas_traseras_medianas.position.z += 40;
+        grupo_bardas_traseras_medianas.position.z += 00;
         grupo_bardas_traseras_medianas.scale.x = .61;
-        grupo_bardas_traseras_medianas.position.y += 160;
-        grupo_bardas_traseras_medianas.position.x -= 58;
+        grupo_bardas_traseras_medianas.position.y += 150;
+        grupo_bardas_traseras_medianas.position.x -= 55;
         grupo_bardas_traseras_medianas.rotation.z += aRadianes(-36);
 
 
@@ -652,7 +723,11 @@
            grupo_edificio1.add(grupo_bardas_completas);
            grupo_edificio1.add(grupo_bardas_completas2);
            grupo_edificio1.add(grupo_bardas_completas3);
+           grupo_edificio1.add(grupo_bardas_completas4);
            grupo_edificio1.add(grupo_bardas_incompletas);
+           grupo_edificio1.add(grupo_bardas_incompletas2);
+           grupo_edificio1.add(grupo_bardas_incompletas3);
+           grupo_edificio1.add(grupo_bardas_incompletas4);
            grupo_edificio1.add(grupo_bardas_traseras_peque);
            grupo_edificio1.add(grupo_bardas_traseras_peque2);
            grupo_edificio1.add(grupo_bardas_traseras_peque3);
@@ -664,7 +739,31 @@
            grupo_edificio1.add(grupo_bardas_traseras_medianas);
 
            dae_mesh.position.x-= 100;
-           grupo_edificio1.add(dae_mesh);
+           var dae_mesh2 = dae_mesh.clone();
+           dae_mesh2.rotation.z -= aRadianes(-120);
+           dae_mesh2.rotation.x -= aRadianes(180);
+           dae_mesh2.position.z -= 3;
+           dae_mesh2.position.x += 19;
+           dae_mesh2.position.y += 11;
+           grupo_mitad1_DAE.add(dae_mesh);
+           grupo_mitad1_DAE.add(dae_mesh2);
+
+           grupo_mitad2_DAE = grupo_mitad1_DAE.clone();
+           grupo_mitad2_DAE.rotation.x += aRadianes(180);
+           grupo_mitad2_DAE.rotation.z += aRadianes(-60);
+           grupo_mitad2_DAE.position.y += 88;
+           grupo_mitad2_DAE.position.z -= 3;
+           grupo_mitad2_DAE.position.x -= 51;
+
+           
+           grupo_DAE.add(grupo_mitad1_DAE);
+           grupo_DAE.add(grupo_mitad2_DAE);
+           dae_mesh_chico.position.z += 100;
+           grupo_DAE.add(dae_mesh_chico);
+
+           grupo_DAE.position.x += 104;
+           grupo_DAE.position.y += 40;
+           
            
            
            
@@ -762,13 +861,20 @@
             grupo_edificio2.add(grupo_magnas18);//seg
             grupo_edificio2.add(grupo_magnas19);
 
+            var grupo_edificio3= grupo_edificio1.clone();
+
+            grupo_edificio3.position.z += 600;
 
             grupo_ambos.add(grupo_edificio1);
-            //grupo_ambos.add(grupo_edificio2);
+            grupo_ambos.add(grupo_edificio3);
 
+            //Aqui se rotan los grupos para que se ajusten a la camara
             grupo_ambos.rotation.x += aRadianes(-90);
+            grupo_DAE.rotation.x += aRadianes(-90);
+
 
             scene.add(grupo_ambos);
+            scene.add(grupo_DAE);
 
             
 
@@ -880,7 +986,7 @@
             // create some point lights
             var pointLight = new THREE.PointLight( 0xFFFFFF );
             var pointLight2 = new THREE.PointLight( 0xFFFFFF );
-            var light = new THREE.AmbientLight( 0x999999 ); // soft white light
+            var light = new THREE.AmbientLight( 0x888888 ); // soft white light
             
 
             // set its position
