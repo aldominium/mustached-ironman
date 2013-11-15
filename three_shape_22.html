@@ -134,6 +134,8 @@
 
             var barda9 = new THREE.CubeGeometry( 160, 2, 20 );//Barda trasera larga2
 
+            var barda_dae = new THREE.CubeGeometry( 100, 2, 40 );//Barda trasera larga2
+
             var barandal = new THREE.CubeGeometry( 160, 2, 5 );
 
 
@@ -394,8 +396,44 @@
            //-------------Creacion de los mesh
            //-----------------------------------
 
+           barda_dae_mesh = new THREE.Mesh( barda_dae, cosaMaterial);
+           barda_dae_mesh.position.x -= 55;
+           barda_dae_mesh.position.y -= 45;
+           barda_dae_mesh.position.z -= 20;
+           barda_dae_mesh.rotation.x += aRadianes(30);
+           barda_dae_mesh.rotation.y += aRadianes(18);
+           barda_dae_mesh.rotation.z += aRadianes(28);
+
+           barda_dae_mesh2 = barda_dae_mesh.clone();
+           barda_dae_mesh2.position.x -= 50;
+           barda_dae_mesh2.position.y += 80;
+
+
            var dae_mesh = new THREE.Mesh( geom_dae, cosaMaterial);
            var dae_mesh_chico = new THREE.Mesh( geom_dae2, cosaMaterial);
+           dae_mesh_chico.position.z -= 40;
+           //dae_mesh_chico.position.y -= 10;
+           dae_mesh_chico.position.x -= 100;
+           var dae_mesh_chico2 = dae_mesh_chico.clone();
+           var dae_mesh_chico3 = dae_mesh_chico.clone();
+           var dae_mesh_chico4 = dae_mesh_chico.clone();
+           dae_mesh_chico2.rotation.z -= aRadianes(-120);
+           dae_mesh_chico2.rotation.x -= aRadianes(180);
+           dae_mesh_chico2.position.z -= 3;
+           dae_mesh_chico2.position.x += 19;
+           dae_mesh_chico2.position.y += 11;
+
+           var grupo_abajo_dae = new THREE.Object3D(); 
+           grupo_abajo_dae.add(dae_mesh_chico.clone());
+           grupo_abajo_dae.add(dae_mesh_chico2.clone());
+           grupo_abajo_dae.rotation.x += aRadianes(180);
+           grupo_abajo_dae.rotation.z += aRadianes(-60);
+           grupo_abajo_dae.position.y += 88;
+           grupo_abajo_dae.position.z -= 83;
+           grupo_abajo_dae.position.x -= 51;
+
+           
+         
 
            var piso_general_mesh = new THREE.Mesh( piso_general, asfalto);
            
@@ -758,8 +796,11 @@
            
            grupo_DAE.add(grupo_mitad1_DAE);
            grupo_DAE.add(grupo_mitad2_DAE);
-           dae_mesh_chico.position.z += 100;
            grupo_DAE.add(dae_mesh_chico);
+           grupo_DAE.add(dae_mesh_chico2);
+           grupo_DAE.add(grupo_abajo_dae);
+           grupo_DAE.add(barda_dae_mesh);
+           grupo_DAE.add(barda_dae_mesh2);
 
            grupo_DAE.position.x += 104;
            grupo_DAE.position.y += 40;
@@ -863,7 +904,9 @@
 
             var grupo_edificio3= grupo_edificio1.clone();
 
-            grupo_edificio3.position.z += 600;
+            grupo_edificio3.rotation.z += aRadianes(180);
+            grupo_edificio3.position.z += 40;
+            grupo_edificio3.position.x += 35;
 
             grupo_ambos.add(grupo_edificio1);
             grupo_ambos.add(grupo_edificio3);
@@ -875,6 +918,7 @@
 
             scene.add(grupo_ambos);
             scene.add(grupo_DAE);
+           // scene.add(barda_dae_mesh2);
 
             
 
@@ -1067,6 +1111,7 @@
                 camera.position.x = cam_xpos;
                 camera.position.z = cam_zpos;
                 camera.rotation.y = ang_rad; 
+                //barda_dae_mesh2.rotation.y += 0.01;
               
             
                 
